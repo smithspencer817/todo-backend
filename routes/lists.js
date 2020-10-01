@@ -23,6 +23,17 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// GET ITEMS FROM A SPECIFIC LIST
+router.get('/:id/list-items', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const listItems = await db.query(`SELECT * FROM list_items WHERE list_id = ${id}`);
+        res.json(listItems.rows);
+    } catch {
+        console.error(err);
+    }
+});
+
 // CREATE NEW LIST
 router.post('/', async (req, res) => {
     try {
