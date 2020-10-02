@@ -2,6 +2,16 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
+// GET ALL LIST ITEMS
+router.get('/', async (req, res) => {
+    try {
+        const allListItems = await db.query("SELECT * FROM list_items");
+        res.json(allListItems.rows);
+    } catch (err) {
+        console.error(err);
+    }
+});
+
 // CREATE NEW LIST ITEM
 router.post('/', async (req, res) => {
     try {
