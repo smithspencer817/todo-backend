@@ -10,9 +10,16 @@ router.post('/', async (req, res) => {
             "SELECT * FROM users WHERE username = $1 AND password = $2",
             [username, password]
         );
-        jwt.sign({user}, 'secretkey', (err, token) => {
-            res.json({token});
-        });
+        if (user.rows.length) {
+            jwt.sign({user}, 'secretkey', (err, token) => {
+                res.json({
+                    user: user.rows[0],
+                    token
+                });
+            });
+        } else {
+            res.json('no match');
+        }
     } catch (err) {
         console.error(err);
     }

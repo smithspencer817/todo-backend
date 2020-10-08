@@ -23,6 +23,17 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+// GET LISTS FOR A SPECIFIC USER
+router.get('/:id/lists', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const lists = await db.query(`SELECT * FROM lists WHERE user_id = ${id}`);
+        res.json(lists.rows[0]);
+    } catch (err) {
+        console.error(err);
+    }
+});
+
 // CREATE NEW USER
 router.post('/', async (req, res) => {
     try {
