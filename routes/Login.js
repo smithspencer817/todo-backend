@@ -1,19 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 router.post('/', async (req, res) => {
     try {
         const { username, password } = req.body;
-        const user = await db.query(
-            "SELECT * FROM users WHERE username = $1 AND password = $2",
-            [username, password]
-        );
-        if (user.rows.length) {
+        const user = await User.findAll({
+            where: { username, password }
+        })
+        if (user[0]['dataValues']) {
             jwt.sign({user}, 'secretkey', (err, token) => {
                 res.json({
-                    user: user.rows[0],
+                    user: user[0]['dataValues'],
                     token
                 });
             });

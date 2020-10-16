@@ -1,16 +1,15 @@
 const { DataTypes } = require('sequelize');
-const db = require('../config/db');
+const db = require('../db');
 
-const List = db.define('list', {
-    user_id: {
+const ListItem = db.define('list_item', {
+    list_id: {
         type: DataTypes.BIGINT,
         allowNull: false
     },
-    name: {
+    description: {
         type: DataTypes.STRING,
         allowNull: false
     }
 });
 
-module.exports = List;
-
+module.exports = ListItem;

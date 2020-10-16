@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
 const jwt = require('jsonwebtoken');
 const List = require('../models/List')
+const ListItem = require('../models/ListItem');
 
 // GET ALL LISTS
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
     try {
         List.findAll()
             .then(lists => res.json(lists))
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET A SPECIFIC LIST
-router.get('/:id', async (req, res) => {
+router.get('/:id', (req, res) => {
     try {
         const { id } = req.params;
         List.findAll({
@@ -30,11 +30,14 @@ router.get('/:id', async (req, res) => {
 });
 
 // GET ITEMS FROM A SPECIFIC LIST
-router.get('/:id/list-items', async (req, res) => {
+router.get('/:id/list-items', (req, res) => {
     try {
         const { id } = req.params;
-        const listItems = await db.query(`SELECT * FROM list_items WHERE list_id = ${id}`);
-        res.json(listItems.rows);
+        ListItem.findAll({
+            where: { list_id: id }
+        })
+        .then(listItems => res.json(listItems))
+        .catch(err => console.log(err));
     } catch {
         console.error(err);
     }
@@ -42,7 +45,7 @@ router.get('/:id/list-items', async (req, res) => {
 
 // CREATE NEW LIST
 router.post('/', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', async (err, authData) => {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
         if (err) {
             res.sendStatus(403);
         } else {
@@ -59,7 +62,7 @@ router.post('/', verifyToken, (req, res) => {
 });
 
 // UPDATE A LIST
-router.put('/:id', async (req, res) => {
+router.put('/:id', (req, res) => {
     try {
         const { id } = req.params;
         const { name } = req.body;
@@ -74,7 +77,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE A LIST
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', (req, res) => {
     try {
         const { id } = req.params;
         List.destroy({

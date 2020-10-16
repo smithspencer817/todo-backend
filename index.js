@@ -5,22 +5,16 @@ const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const exphbs = require('express-handlebars');
 
-// IMPORTED ROUTES
-const loginRoutes = require('./routes/Login');
-const usersRoutes = require('./routes/Users');
-const listsRoutes = require('./routes/Lists');
-const listItemsRoutes = require('./routes/ListItems');
-
 // MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-// MIDDLEWARE ROUTES
-app.use('/api/login', loginRoutes);
-app.use('/api/users', usersRoutes);
-app.use('/api/lists', listsRoutes);
-app.use('/api/list-items', listItemsRoutes);
+// ROUTES
+app.use('/api/login', require('./routes/Login'));
+app.use('/api/users', require('./routes/UsersController'));
+app.use('/api/lists', require('./routes/ListsController'));
+app.use('/api/list-items', require('./routes/ListItemsController'));
 
 // SERVER
 app.listen(PORT, () => {

@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
+const ListItem = require('../models/ListItem');
 
 // GET ALL LIST ITEMS
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
     try {
-        const allListItems = await db.query("SELECT * FROM list_items");
-        res.json(allListItems.rows);
+        ListItem.findAll()
+            .then(listItems => res.json(listItems))
+            .catch(err => console.log(err));
     } catch (err) {
         console.error(err);
     }
@@ -16,11 +17,9 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { description, list_id } = req.body;
-        const newListItem = await db.query(
-            "INSERT INTO list_items (description, list_id) VALUES($1, $2) RETURNING *",
-            [description, list_id]
-        );
-        res.json(newListItem.rows[0]);
+        ListItem.create({ description, list_id })
+        .then(listItem => res.json(listItem))
+        .catch(err => console.log(err));
     } catch (err) {
         console.error(err.message);
     }
@@ -31,11 +30,11 @@ router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { description } = req.body;
-        await db.query(
-            "UPDATE list_items SET description = $1 WHERE id = $2",
-            [description, id]
-        );
-        res.json("list item updated");
+        ListItem.update({ description }, {
+            where: { id }
+        })
+        .then(res.json("list item was updated"))
+        .catch(err => console.log(err));
     } catch (err) {
         console.error(err.message);
     }
@@ -45,8 +44,11 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await db.query(`DELETE FROM list_items WHERE id = ${id}`);
-        res.json('list item deleted');
+        ListItem.destroy({
+            where: { id }
+        })
+        .then(res.json("list item deleted"))
+        .catch(err => console.log(err));
     } catch (err) {
         console.error(err);
     }
