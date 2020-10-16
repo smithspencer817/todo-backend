@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const jwt = require('jsonwebtoken');
+const List = require('../models/List')
 
 // GET ALL LISTS
 router.get('/', async (req, res) => {
     try {
-        const allLists = await db.query("SELECT * FROM lists");
-        res.json(allLists.rows);
+        List.findAll()
+            .then(lists => res.json(lists))
+            .catch(err => console.log(err));
     } catch (err) {
         console.error(err);
     }
@@ -17,8 +19,11 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const list = await db.query(`SELECT * FROM lists WHERE id = ${id}`);
-        res.json(list.rows[0]);
+        List.findAll({
+            where: { id }
+        })
+        .then(list => res.json(list))
+        .catch(err => console.log(err));
     } catch (err) {
         console.error(err);
     }
@@ -43,14 +48,9 @@ router.post('/', verifyToken, (req, res) => {
         } else {
             try {
                 const { name, user_id } = req.body;
-                const newList = await db.query(
-                    "INSERT INTO lists (name, user_id) VALUES($1, $2) RETURNING *",
-                    [name, user_id]
-                );
-                res.json({
-                    newList,
-                    authData
-                });
+                List.create({ name, user_id })
+                .then(list => res.json({ list, authData }))
+                .catch(err => console.log(err));
             } catch (err) {
                 console.error(err.message);
             }
@@ -63,11 +63,11 @@ router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { name } = req.body;
-        await db.query(
-            "UPDATE lists SET name = $1 WHERE id = $2",
-            [name, id]
-        );
-        res.json("list was updated")
+        List.update({ name }, {
+            where: { id }
+        })
+        .then(res.json("list was updated"))
+        .catch(err => console.log(err));
     } catch (err) {
         console.error(err.message);
     }
@@ -77,8 +77,11 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await db.query(`DELETE FROM lists WHERE id = ${id}`);
-        res.json('list deleted');
+        List.destroy({
+            where: { id }
+        })
+        .then(res.json("list deleted"))
+        .catch(err => console.log(err));
     } catch (err) {
         console.error(err);
     }

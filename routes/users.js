@@ -28,7 +28,7 @@ router.get('/:id/lists', async (req, res) => {
     try {
         const { id } = req.params;
         const lists = await db.query(`SELECT * FROM lists WHERE user_id = ${id}`);
-        res.json(lists.rows[0]);
+        res.json(lists.rows);
     } catch (err) {
         console.error(err);
     }
