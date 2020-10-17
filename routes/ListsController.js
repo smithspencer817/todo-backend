@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     try {
         const { id } = req.params;
-        List.findAll({
+        List.findOne({
             where: { id }
         })
         .then(list => res.json(list))
@@ -53,7 +53,7 @@ router.post('/', verifyToken, (req, res) => {
                 const { name, user_id } = req.body;
                 List.create({ name, user_id })
                 .then(list => res.json({ list, authData }))
-                .catch(err => console.log(err));
+                .catch(err => res.json(err.errors));
             } catch (err) {
                 console.error(err.message);
             }

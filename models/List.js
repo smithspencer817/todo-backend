@@ -8,9 +8,17 @@ const List = db.define('list', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            length(value) {
+                if (value.length === 0) {
+                    throw new Error("list name can't be empty")
+                } else if (value.length > 20) {
+                    throw new Error("list name can't be longer than 20 characters")
+                }
+            }
+        }
     }
 });
 
 module.exports = List;
-

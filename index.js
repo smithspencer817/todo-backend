@@ -3,7 +3,6 @@ const app = express();
 const cors = require('cors');
 const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
-const exphbs = require('express-handlebars');
 
 // MIDDLEWARE
 app.use(cors());
