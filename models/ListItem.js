@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const db = require('../db');
+const db = require('../config/db');
 
 const ListItem = db.define('list_item', {
     list_id: {
