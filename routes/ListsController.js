@@ -62,47 +62,53 @@ router.post('/', verifyToken, (req, res) => {
 });
 
 // UPDATE A LIST
-router.put('/:id', (req, res) => {
-    try {
-        const { id } = req.params;
-        const { name } = req.body;
-        List.update({ name }, {
-            where: { id }
-        })
-        .then(res.json("list was updated"))
-        .catch(err => console.log(err));
-    } catch (err) {
-        console.error(err.message);
-    }
+router.put('/:id', verifyToken, (req, res) => {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if (err) {
+            res.sendStatus(403)
+        } else {
+            try {
+                const { id } = req.params;
+                const { name } = req.body;
+                List.update({ name }, {
+                    where: { id }
+                })
+                .then(res => res.json())
+                .catch(err => res.json(err.errors));
+            } catch (err) {
+                console.error(err.message);
+            }
+        }
+    });
 });
 
 // DELETE A LIST
-router.delete('/:id', (req, res) => {
-    try {
-        const { id } = req.params;
-        List.destroy({
-            where: { id }
-        })
-        .then(res.json("list deleted"))
-        .catch(err => console.log(err));
-    } catch (err) {
-        console.error(err);
-    }
+router.delete('/:id', verifyToken, (req, res) => {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if (err) {
+            res.sendStatus(403)
+        } else {
+            try {
+                const { id } = req.params;
+                List.destroy({
+                    where: { id }
+                })
+                .then(res => res.json())
+                .catch(err => res.json(err));
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    });
 });
 
 // VERIFY TOKEN
 function verifyToken(req, res, next) {
-    // Get auth header value
     const bearerHeader = req.headers['authorization'];
-    // check if bearer is undefined
     if (typeof bearerHeader !== 'undefined') {
-        // split at the space
         const bearer = bearerHeader.split(' ');
-        // get token from array
         const bearerToken = bearer[1];
-        // set the token
         req.token = bearerToken
-        // next middleware
         next();
     } else {
         res.sendStatus(403);
