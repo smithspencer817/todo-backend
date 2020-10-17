@@ -53,7 +53,7 @@ router.post('/', (req, res) => {
             password
         })
         .then(user => res.json(user))
-        .catch(err => console.log(err));
+        .catch(err => res.json(err.errors));
     } catch (err) {
         console.error(err.message);
     }
