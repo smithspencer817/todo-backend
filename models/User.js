@@ -8,7 +8,7 @@ const User = db.define('user', {
         validate: {
             len: {
                 args: [1,26],
-                msg: "must be between 1 and 26 characters"
+                msg: "first name must be between 1 and 26 characters"
             }
         }
     },
@@ -18,18 +18,30 @@ const User = db.define('user', {
         validate: {
             len: {
                 args: [1,26],
-                msg: "must be between 1 and 26 characters"
+                msg: "last name must be between 1 and 26 characters"
             }
         }
     },
     username: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+            len: {
+                args: [4,26],
+                msg: "username must be between 4 and 26 characters"
+            }
+        }
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            len: {
+                args: [4,26],
+                msg: "password must be between 4 and 26 characters"
+            }
+        }
     }
 }, {
     timestamps: false

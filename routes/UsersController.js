@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     try {
         const { id } = req.params;
-        User.findAll({
+        User.findOne({
             where: { id }
         })
         .then(user => res.json(user))
