@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const jwt = require('jsonwebtoken');
 const List = require('../models/List');
 const User = require('../models/User');
 
@@ -54,7 +55,14 @@ router.post('/', (req, res) => {
             username,
             password: hash
         })
-        .then(user => res.json(user))
+        .then(user => {
+            jwt.sign({user}, 'secretkey', (err, token) => {
+                res.json({
+                    user: user['dataValues'],
+                    token
+                });
+            });
+        })
         .catch(err => res.json(err.errors))
     });
 });

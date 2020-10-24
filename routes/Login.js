@@ -1,27 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
-router.post('/', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        const user = await User.findAll({
-            where: { username, password }
-        })
-        if (user.length) {
-            jwt.sign({user}, 'secretkey', (err, token) => {
-                res.json({
-                    user: user[0]['dataValues'],
-                    token
-                });
-            });
+router.post('/', (req, res) => {
+    const { username } = req.body;
+    User.findOne({
+        where: { username }
+    })
+    .then(user => {
+        if (!user) {
+            res.json('no match')
         } else {
-            res.json('no match');
+            bcrypt.compare(req.body.password, user.password, (err, result) => {
+                if (result == true) {
+                    jwt.sign({user}, 'secretkey', (err, token) => {
+                        res.json({
+                            user: user['dataValues'],
+                            token
+                        });
+                    });
+                } else {
+                    res.json('no match');
+                }
+            });
         }
-    } catch (err) {
-        console.error(err);
-    }
+    });
 });
 
 module.exports = router;
