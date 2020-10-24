@@ -46,21 +46,17 @@ router.get('/:id/lists', (req, res) => {
 
 // CREATE NEW USER
 router.post('/', (req, res) => {
-    try {
-        const { first_name, last_name, username, password } = req.body
-        bcrypt.hash(password, saltRounds, async (err, hash) => {
-            User.create({
-                first_name,
-                last_name,
-                username,
-                password: hash
-            })
-            .then(user => res.json(user))
-            .catch(err => res.json(err.errors))
-        });
-    } catch (err) {
-        console.error(err.message);
-    }
+    const { first_name, last_name, username, password } = req.body
+    bcrypt.hash(password, saltRounds, async (err, hash) => {
+        User.create({
+            first_name,
+            last_name,
+            username,
+            password: hash
+        })
+        .then(user => res.json(user))
+        .catch(err => res.json(err.errors))
+    });
 });
 
 // DELETE A USER
