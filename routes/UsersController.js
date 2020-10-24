@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const saltRounds = 12;
+const saltRounds = 10;
 const List = require('../models/List');
 const User = require('../models/User');
 
@@ -48,14 +48,16 @@ router.get('/:id/lists', (req, res) => {
 router.post('/', (req, res) => {
     try {
         const { first_name, last_name, username, password } = req.body
-        User.create({
-            first_name,
-            last_name,
-            username,
-            password
-        })
-        .then(user => res.json(user))
-        .catch(err => res.json(err.errors));
+        bcrypt.hash(password, saltRounds, async (err, hash) => {
+            User.create({
+                first_name,
+                last_name,
+                username,
+                password: hash
+            })
+            .then(user => res.json(user))
+            .catch(err => res.json(err.errors))
+        });
     } catch (err) {
         console.error(err.message);
     }
