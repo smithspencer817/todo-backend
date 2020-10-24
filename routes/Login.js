@@ -9,7 +9,7 @@ router.post('/', async (req, res) => {
         const user = await User.findAll({
             where: { username, password }
         })
-        if (user[0]['dataValues']) {
+        if (user.length) {
             jwt.sign({user}, 'secretkey', (err, token) => {
                 res.json({
                     user: user[0]['dataValues'],

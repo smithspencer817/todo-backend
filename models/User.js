@@ -35,13 +35,7 @@ const User = db.define('user', {
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            len: {
-                args: [4,26],
-                msg: "password must be between 4 and 26 characters"
-            }
-        }
+        allowNull: false
     }
 }, {
     timestamps: false
