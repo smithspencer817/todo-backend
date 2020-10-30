@@ -10,12 +10,9 @@ const List = db.define('list', {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            length(value) {
-                if (value.length === 0) {
-                    throw new Error("list name can't be empty")
-                } else if (value.length > 20) {
-                    throw new Error("list name can't be longer than 20 characters")
-                }
+            len: {
+                args: [1,26],
+                msg: "list name must be between 1 and 26 characters"
             }
         }
     }

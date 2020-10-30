@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     })
     .then(user => {
         if (!user) {
-            res.json('no match')
+            res.json('user not found')
         } else {
             bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if (result == true) {
@@ -22,7 +22,7 @@ router.post('/', (req, res) => {
                         });
                     });
                 } else {
-                    res.json('no match');
+                    res.json('password did not match username');
                 }
             });
         }
