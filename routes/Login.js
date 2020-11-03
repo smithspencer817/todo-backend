@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('../models/User');
+const models = require('../models')
+const User = models.User
 
 router.post('/', (req, res) => {
     const { username } = req.body;
@@ -11,7 +12,7 @@ router.post('/', (req, res) => {
     })
     .then(user => {
         if (!user) {
-            res.json('user not found')
+            res.json('username not found')
         } else {
             bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if (result == true) {

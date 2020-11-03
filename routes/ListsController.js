@@ -1,46 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const List = require('../models/List')
-const ListItem = require('../models/ListItem');
+const models = require('../models')
+const List = models.List
 
 // GET ALL LISTS
 router.get('/', (req, res) => {
-    try {
-        List.findAll()
-            .then(lists => res.json(lists))
-            .catch(err => console.log(err));
-    } catch (err) {
-        console.error(err);
-    }
+    List.findAll({
+        include: 'listItems' 
+    })
+    .then(lists => res.json(lists))
+    .catch(err => console.log(err));
 });
 
 // GET A SPECIFIC LIST
 router.get('/:id', (req, res) => {
-    try {
-        const { id } = req.params;
-        List.findOne({
-            where: { id }
-        })
-        .then(list => res.json(list))
-        .catch(err => console.log(err));
-    } catch (err) {
-        console.error(err);
-    }
-});
-
-// GET ITEMS FROM A SPECIFIC LIST
-router.get('/:id/list-items', (req, res) => {
-    try {
-        const { id } = req.params;
-        ListItem.findAll({
-            where: { list_id: id }
-        })
-        .then(listItems => res.json(listItems))
-        .catch(err => console.log(err));
-    } catch {
-        console.error(err);
-    }
+    const { id } = req.params;
+    List.findOne({
+        where: { id }, include: 'listItems'
+    })
+    .then(list => res.json(list))
+    .catch(err => console.log(err));
 });
 
 // CREATE NEW LIST
@@ -49,14 +29,10 @@ router.post('/', verifyToken, (req, res) => {
         if (err) {
             res.sendStatus(403);
         } else {
-            try {
-                const { name, user_id } = req.body;
-                List.create({ name, user_id })
-                .then(list => res.json({ list, authData }))
-                .catch(err => res.json(err.errors));
-            } catch (err) {
-                console.error(err.message);
-            }
+            const { name, userId } = req.body;
+            List.create({ name, userId })
+            .then(list => res.json({ list }))
+            .catch(err => res.json(err.errors));
         }
     });
 });
@@ -67,17 +43,13 @@ router.put('/:id', verifyToken, (req, res) => {
         if (err) {
             res.sendStatus(403)
         } else {
-            try {
-                const { id } = req.params;
-                const { name } = req.body;
-                List.update({ name }, {
-                    where: { id }
-                })
-                .then(res => res.json())
-                .catch(err => res.json(err.errors));
-            } catch (err) {
-                console.error(err.message);
-            }
+            const { id } = req.params;
+            const { name } = req.body;
+            List.update({ name }, {
+                where: { id }
+            })
+            .then(res.json('list updated'))
+            .catch(err => res.json(err.errors));
         }
     });
 });
@@ -88,16 +60,12 @@ router.delete('/:id', verifyToken, (req, res) => {
         if (err) {
             res.sendStatus(403)
         } else {
-            try {
-                const { id } = req.params;
-                List.destroy({
-                    where: { id }
-                })
-                .then(res => res.json())
-                .catch(err => res.json(err));
-            } catch (err) {
-                console.error(err);
-            }
+            const { id } = req.params;
+            List.destroy({
+                where: { id }
+            })
+            .then(res.json('list deleted'))
+            .catch(err => res.json(err));
         }
     });
 });
