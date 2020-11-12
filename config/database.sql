@@ -12,11 +12,11 @@ CREATE TABLE users(
 
 CREATE TABLE lists(
     id BIGSERIAL NOT NULL,
-    user_id BIGINT NOT NULL,
+    userId BIGINT NOT NULL,
     name VARCHAR(50) NOT NULL,
-    created_at timestamp NOT NULL DEFAULT NOW(),
+    createdAt timestamp NOT NULL DEFAULT NOW(),
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE;
 );
 
 CREATE TABLE list_items(
@@ -25,5 +25,5 @@ CREATE TABLE list_items(
     description VARCHAR(255),
     created_at timestamp NOT NULL DEFAULT NOW(),
     PRIMARY KEY (id),
-    FOREIGN KEY (list_id) REFERENCES lists(id) ON DELETE CASCADE
+    FOREIGN KEY (listId) REFERENCES lists(id) ON DELETE CASCADE
 );

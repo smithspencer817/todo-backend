@@ -5,8 +5,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class List extends Model {
     static associate(models) {
-      List.hasMany(models.ListItem, {foreignKey: 'listId', as: 'listItems'})
-      List.belongsTo(models.User, {sourceKey: 'userId', as: 'user'})
+      List.hasMany(models.ListItem, {foreignKey: 'listId', as: 'listItems', constraints: true})
+      List.belongsTo(models.User, {sourceKey: 'userId', as: 'user', constraints: true})
     }
   };
   List.init({

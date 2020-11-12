@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const models = require('../models')
-const List = models.List
+const List = models.List;
 
 // GET ALL LISTS
 router.get('/', (req, res) => {
@@ -31,7 +31,7 @@ router.post('/', verifyToken, (req, res) => {
         } else {
             const { name, userId } = req.body;
             List.create({ name, userId })
-            .then(list => res.json({ list }))
+            .then(list => res.json(list))
             .catch(err => res.json(err.errors));
         }
     });

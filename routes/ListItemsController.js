@@ -20,7 +20,7 @@ router.post('/', verifyToken, (req, res) => {
             const { description, listId } = req.body;
             ListItem.create({ description, listId })
             .then(listItem => res.json(listItem))
-            .catch(err => console.log(err));
+            .catch(err => res.json(err));
         }
     });
 });
