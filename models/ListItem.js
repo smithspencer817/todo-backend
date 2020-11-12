@@ -10,13 +10,18 @@ module.exports = (sequelize, DataTypes) => {
   };
   ListItem.init({
     listId: {
-        type: DataTypes.BIGINT,
-        allowNull: false
+      type: DataTypes.BIGINT,
+      allowNull: false
     },
     description: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    completed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
   }, {
     sequelize,
     modelName: 'ListItem',
