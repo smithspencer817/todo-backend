@@ -32,8 +32,8 @@ router.put('/:id', verifyToken, (req, res) => {
             res.sendStatus(403);
         } else {
             const { id } = req.params;
-            const { description } = req.body;
-            ListItem.update({ description }, {
+            const { description, completed } = req.body;
+            ListItem.update({ description, completed }, {
                 where: { id }
             })
             .then(res.json("list item was updated"))
