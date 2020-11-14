@@ -32,7 +32,7 @@ router.get('/:id/lists', verifyToken, (req, res) => {
         } else {
             const { id } = req.params;
             List.findAll({
-                where: { userId: id }, include: 'listItems'
+                where: { userId: id }, include: 'listItems', order: [['id']]
             })
             .then(lists => res.json(lists))
             .catch(err => console.log(err))
