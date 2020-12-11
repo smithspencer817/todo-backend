@@ -12,18 +12,20 @@ router.post('/', (req, res) => {
     })
     .then(user => {
         if (!user) {
-            res.json('username not found')
+            res.status(404).send(
+                { message: 'user not found' }
+            )
         } else {
             bcrypt.compare(req.body.password, user.password, (err, result) => {
                 if (result == true) {
                     jwt.sign({user}, 'secretkey', (err, token) => {
-                        res.json({
-                            user: user['dataValues'],
-                            token
-                        });
+                        res.cookie('token', token, { httpOnly: true });
+                        res.json({ token, user })
                     });
                 } else {
-                    res.json('password did not match username');
+                    res.status(401).send(
+                        { message: 'password did not match username' }
+                    );
                 }
             });
         }

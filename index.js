@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 // HEROKU DATABASE
 const { Pool } = require('pg');
@@ -13,10 +14,12 @@ const pool = new Pool({
     }
 });
 
+
 // MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 // ROUTES
 app.use('/api/login', require('./routes/Login'));
