@@ -7,6 +7,7 @@ const models = require('../models')
 const List = models.List
 const User = models.User
 
+
 // GET ALL USERS
 router.get('/', (req, res) => {
     User.findAll()
